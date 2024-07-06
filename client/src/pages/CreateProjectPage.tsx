@@ -1,48 +1,79 @@
+import { createProject } from '../api/ProjectAPI';
 import { useForm  } from "react-hook-form"
+import { Link, useNavigate } from 'react-router-dom';
 
 
 interface DraftProject {
-  name: string,
+  projectName: string,
+  clientName: string
   description: string
 }
 
 export const CreateProjectPage = () => {
 
   const { register, formState: { errors }, handleSubmit, reset } = useForm<DraftProject>()
+  const navigate = useNavigate()
 
-  const createProjectHandler = ( draftProject: DraftProject ) => {
+  const createProjectHandler = async ( draftProject: DraftProject ) => {
 
+    await createProject(draftProject)
+    navigate("/")
     reset()
   }
 
   return (
     <form 
-      className="px-10 space-y-6"
+      className="px-10 bg-white space-y-6 roudned-sm shadow-lg py-5 mx-20"
       onSubmit={handleSubmit(createProjectHandler)}
     >
-        <h1 className="text-2xl font-bold text-black-500 mt-5">Crea tu proyecto</h1>
+      <h1 className="text-3xl font-bold text-black-500">Crea tu proyecto</h1>
+      <div className="flex flex-col">
+        <span className="text-xl text-gray-400 ">Rellena el siguiente formulario para crear tu proyecto</span>
 
+        <Link to="/" className="bg-purple-400 w-[350px] mt-2 py-2  text-center font-bold hover:bg-purple-500  text-white text-xl fonto-bold cursor-pointer transition-colors">
+          Volver a los proyectos
+        </Link>
+      </div>
+  
         <div className="flex flex-col space-y-2">
           <span className="text-xl font-bold">Nombre del proyecto</span>
           <input 
-            type="text" id="projectNameInput" className="shadow-sm p-2" placeholder="Ej: Administrador de tareas"  
-            { ...register("name", {
+            type="text" id="projectNameInput" className="shadow-sm p-2 border-gray border-2" placeholder="Ej: Administrador de tareas"  
+            { ...register("projectName", {
               required: "El nombre del proyecto no puede ir vacío",
               maxLength: { value: 40, message: "El nombre ingresado es muy largo" }
             } ) }
           />
-          {errors.name && (
+          {errors.projectName && (
             <div 
             className="bg-red-400 py-3 text-white px-2 uppercase font-bold">
-              {errors.name?.message?.toString()}
+              {errors.projectName?.message?.toString()}
             </div>
           )}
         </div>
 
+        <div className="flex flex-col space-y-2">
+          <span className="text-xl font-bold">Nombre del cliente</span>
+          <input 
+            type="text" id="projectNameInput" className="shadow-sm p-2 border-gray border-2" placeholder="Ej: Spotify"  
+            { ...register("clientName", {
+              required: "El nombre del cliente no puede ir vacío",
+              maxLength: { value: 30, message: "El nombre ingresado es muy largo" }
+            })}
+          />
+          {errors.clientName && (
+            <div 
+            className="bg-red-400 py-3 text-white px-2 uppercase font-bold">
+              {errors.clientName?.message?.toString()}
+            </div>
+          )}
+        </div>
+
+
         <div className="flex flex-col space-y-3">
           <span className="text-xl font-bold">Descripción del proyecto</span>
           <textarea 
-            id="projectNameInput" className="px-2 shadow-sm p-1" placeholder="Ej: Proyecto"
+            id="projectNameInput" className="px-2 shadow-sm p-1 border-gray border-2" placeholder="Ej: Proyecto"
             { ...register("description", {
               required: "La descripción del proyecto no puede ir vacía"
             } ) }
