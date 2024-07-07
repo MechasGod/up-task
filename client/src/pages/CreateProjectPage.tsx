@@ -1,5 +1,7 @@
 import { createProject } from '../api/ProjectAPI';
 import { useForm  } from "react-hook-form"
+import { useMutation } from "@tanstack/react-query"
+import { toast } from "react-toastify"
 import { Link, useNavigate } from 'react-router-dom';
 
 
@@ -12,13 +14,28 @@ interface DraftProject {
 export const CreateProjectPage = () => {
 
   const { register, formState: { errors }, handleSubmit, reset } = useForm<DraftProject>()
+  const mutation = useMutation({
+    mutationFn: createProject,
+    onError: (error) => {
+      toast.error(error.message)
+      navigate("/")
+      reset()
+    },
+    onSuccess: ( data ) => {
+      toast.success(data)
+      navigate("/")
+      reset()
+    }
+  })
   const navigate = useNavigate()
 
-  const createProjectHandler = async ( draftProject: DraftProject ) => {
+  const createProjectHandler = ( draftProject: DraftProject ) => {
 
-    await createProject(draftProject)
-    navigate("/")
-    reset()
+    // const createdProject = await createProject(draftProject)
+    mutation.mutate(draftProject) //retorna una promesa, se le pasa el argumento que esperamos cuando definimos
+    //mutationFn. NO ES NECESARIO EL mutateAsync ni el await ni el async ya que react query maneja la 
+    //asincronia en automatico
+
   }
 
   return (
