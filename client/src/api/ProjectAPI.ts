@@ -67,3 +67,16 @@ export async function updateProject({id, body}: {id: string, body: DraftProject}
     throw new Error(error.message)
   }
 }
+
+
+export async function deleteProject ( id: string ) {
+  try {
+    
+    const { data } = await api.delete<string>(`/projects/${id}`)
+
+    return data
+    
+  } catch (error) {
+    throw new Error(error.message)
+  }
+}
