@@ -10,7 +10,7 @@ export class TaskController {
 
       const project = req.project
       
-      const task = await new TaskModel(req.body) //uso esta forma porque si uso create va a validar que tenga el project
+      const task = new TaskModel(req.body) //uso esta forma porque si uso create va a validar que tenga el project
       //como no lo tendra, mandara un error a consola
       
       task.project = project.id
@@ -19,7 +19,9 @@ export class TaskController {
       //Promise.allSettled hace que se ejecute la promesa si ambas promesas se cumplen
       await Promise.allSettled([task.save(), project.save()])
 
-      res.json(task).status(201)
+      
+
+      res.json("Tarea creada correctamente").status(201)
 
     } catch (error) {
       console.log(error)

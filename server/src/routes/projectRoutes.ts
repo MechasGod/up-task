@@ -43,8 +43,8 @@ router.param("projectId", ValidateProjectExists) //lo que hace es verificar que 
 //de url projectId, pasen por el middleware antes
 
 router.post("/:projectId/tasks", 
-  body("name").isEmpty().withMessage("El nombre no debe estar vacio"),
-  body("description").isEmpty().withMessage("La descripción no debe estar vacia"),
+  body("name").notEmpty().withMessage("El nombre no debe estar vacio"),
+  body("description").notEmpty().withMessage("La descripción no debe estar vacia"),
   handleErrors,
   //ValidateProjectExists,
   TaskController.createTask )
