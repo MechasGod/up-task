@@ -80,7 +80,7 @@ export const EditProjectPage = () => {
           <span className="text-xl font-bold">Nombre del cliente</span>
           <input 
             defaultValue={currentProject?.clientName}
-            type="text" id="projectNameInput" className="shadow-sm p-2 border-gray border-2" placeholder="Ej: Spotify"  
+            type="text" id="clientNameInput" className="shadow-sm p-2 border-gray border-2" placeholder="Ej: Spotify"  
             { ...register("clientName", {
               required: "El nombre del cliente no puede ir vacío",
               maxLength: { value: 40, message: "El nombre ingresado es muy largo" }
@@ -99,7 +99,7 @@ export const EditProjectPage = () => {
           <span className="text-xl font-bold">Descripción del proyecto</span>
           <textarea 
             defaultValue={currentProject?.description}
-            id="projectNameInput" className="px-2 shadow-sm p-1 border-gray border-2" placeholder="Ej: Proyecto"
+            id="descriptionInput" className="px-2 shadow-sm p-1 border-gray border-2" placeholder="Ej: Proyecto"
             { ...register("description", {
               required: "La descripción del proyecto no puede ir vacía"
             } ) }

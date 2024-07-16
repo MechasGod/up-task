@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom"
+import { Link, Outlet } from "react-router-dom"
 import { Logo } from '../../components/Logo';
 import NavMenu from '@/components/NavMenu';
 import { ToastContainer } from 'react-toastify';
@@ -10,7 +10,11 @@ export const MainLayout = () => {
       <header className="bg-gray-800 py-5">
           <div className="justify-between items-center max-w-screen-xl mx-auto flex flex-col lg:flex-row">
             
-            <div className="w-64"> <Logo /> </div>
+            <div className="w-64">
+              <Link to={`/`}>
+                <Logo /> 
+              </Link>
+            </div>
             <NavMenu />
 
           </div>

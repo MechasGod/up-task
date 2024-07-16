@@ -80,3 +80,4 @@ export async function deleteProject ( id: string ) {
     throw new Error(error.message)
   }
 }
+

@@ -40,7 +40,7 @@ export const CreateProjectPage = () => {
 
   return (
     <form 
-      className="px-10 bg-white space-y-6 roudned-sm shadow-lg py-5 mx-20"
+    className="px-10 bg-white space-y-6 roudned-sm shadow-lg py-5 mx-20"
       onSubmit={handleSubmit(createProjectHandler)}
     >
       <h1 className="text-3xl font-bold text-black-500">Crea tu proyecto</h1>
@@ -72,7 +72,7 @@ export const CreateProjectPage = () => {
         <div className="flex flex-col space-y-2">
           <span className="text-xl font-bold">Nombre del cliente</span>
           <input 
-            type="text" id="projectNameInput" className="shadow-sm p-2 border-gray border-2" placeholder="Ej: Spotify"  
+            type="text" id="clientNameInput" className="shadow-sm p-2 border-gray border-2" placeholder="Ej: Spotify"  
             { ...register("clientName", {
               required: "El nombre del cliente no puede ir vacío",
               maxLength: { value: 30, message: "El nombre ingresado es muy largo" }
@@ -90,7 +90,7 @@ export const CreateProjectPage = () => {
         <div className="flex flex-col space-y-3">
           <span className="text-xl font-bold">Descripción del proyecto</span>
           <textarea 
-            id="projectNameInput" className="px-2 shadow-sm p-1 border-gray border-2" placeholder="Ej: Proyecto"
+            id="descriptionInput" className="px-2 shadow-sm p-1 border-gray border-2" placeholder="Ej: Proyecto"
             { ...register("description", {
               required: "La descripción del proyecto no puede ir vacía"
             } ) }
