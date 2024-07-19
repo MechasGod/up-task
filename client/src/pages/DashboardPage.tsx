@@ -19,7 +19,7 @@ export const DashboardPage = () => {
       <p className="text-2xl font-light text-gray-500 mt-5">Maneja y administra tus proyectos</p>
 
       <ProjectsRender data={data} />
-
+      
       <nav className="my-5">
         <Link 
           className="bg-purple-400 hover:bg-purple-500 px-10 py-3 text-white text-xl fonto-bold cursor-pointer transition-colors"

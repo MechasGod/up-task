@@ -17,7 +17,8 @@ export const CreateProjectPage = () => {
   const mutation = useMutation({
     mutationFn: createProject,
     onError: (error) => {
-      toast.error(error.message)
+      toast.error("Ha habido un error, intentelo más tarde")
+      console.log(error)
       navigate("/")
       reset()
     },

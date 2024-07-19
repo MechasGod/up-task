@@ -3,7 +3,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { DraftTask } from '@/types/index';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createTask } from '../../api/TaskAPI';
 import { toast } from 'react-toastify';
 
@@ -12,6 +12,8 @@ export default function AddTaskModal() {
     const navigate = useNavigate()
     const { register, formState: { errors }, handleSubmit, reset } = useForm<DraftTask>()
     
+    const queryClient = useQueryClient()
+
     const { search } = useLocation()
     const { projectId } = useParams()
     const queryParams = new URLSearchParams(search)
@@ -23,8 +25,10 @@ export default function AddTaskModal() {
         mutationFn: createTask,
         onError: (error) => {
             console.log(error)
+            toast.error("Ha habido un error, intentelo más tarde")
         },
         onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ["projectById", projectId] })
             toast.success(data)
             navigate(`/projects/${projectId}`)
             reset()

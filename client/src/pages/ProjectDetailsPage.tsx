@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getProjectById } from '../api/ProjectAPI';
 import { useNavigate, useParams } from 'react-router-dom';
 import AddTaskModal from '@/components/ProjectDetails/AddTaskModal';
-
+import { TaskList } from '@/components/ProjectDetails/TaskList';
 
 export const ProjectDetailsPage = () => {
 
@@ -12,6 +12,9 @@ export const ProjectDetailsPage = () => {
     queryKey: ["projectById", projectId],
     queryFn: () => getProjectById(projectId!),
   })
+
+  if (isLoading) return (<h1 className="text-center font-bold text-3xl">Cargando...</h1>)
+  if (isError) return (<h1 className="text-center font-bold text-3xl">Ha habido un error...</h1>)
 
   return (
     <>
@@ -26,8 +29,10 @@ export const ProjectDetailsPage = () => {
           Agregar Tarea
         </button>
 
-        <AddTaskModal/>
+
+        <AddTaskModal />
       </nav>
+      <TaskList tasks={currentProject!.tasks}/>
     </>
   )
 }
