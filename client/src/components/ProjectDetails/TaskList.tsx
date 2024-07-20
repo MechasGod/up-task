@@ -1,6 +1,7 @@
 import { Task } from '@/types/index';
 import { TaskCard } from './TaskCard';
 
+
 interface Props {
   tasks: Task[]
 }
@@ -38,7 +39,7 @@ export const TaskList = ({ tasks }: Props) => {
     return { ...acc, [task.status]: currentGroup };   
   }, initialStatusGroups);
 
-  console.log(tasks)
+  
 
   return (
     <div>

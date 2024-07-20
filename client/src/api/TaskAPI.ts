@@ -12,3 +12,33 @@ export async function createTask ( { projectId, draftTask } : { projectId: strin
     console.log(error)
   }
 }
+
+export async function getTaskById ( projectId: string, taskId: string ) {
+  try {
+
+    const { data } = await api.get(`/projects/${projectId}/tasks/${taskId}`)
+
+    return data   
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+interface UpdateTaskParams { 
+  projectId: string,
+  taskId: string,
+  draftTask: DraftTask
+}
+
+export async function updateTask ( { projectId, taskId, draftTask }: UpdateTaskParams) {
+  try {
+    
+    const { data } = await api.put(`/projects/${projectId}/tasks/${taskId}`, draftTask)
+
+    return data
+
+  } catch (error) {
+    console.log(error)
+  }
+}
