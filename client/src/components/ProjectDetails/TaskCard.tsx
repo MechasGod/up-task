@@ -1,15 +1,30 @@
 import { Task } from '@/types/index';
 import { Menu, Transition } from '@headlessui/react';
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { deleteTask } from '../../api/TaskAPI';
 import { Fragment } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 
 export const TaskCard = ( { task }: { task: Task } ) => {
 
     const navigate = useNavigate()
-
+    const queryClient = useQueryClient()
     
+
+    const { mutate } = useMutation({
+        mutationFn: deleteTask,
+        onError: (error) => {
+            console.log(error)
+            toast.error("Ha habido un error, intentelo más tarde")
+        },
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ["projectById", task.project] })
+            toast.success(data)
+        }
+    })
 
     return (
     <li className="p-5 bg-white border border-slate-300 flex justify-between gap-3">
@@ -50,7 +65,9 @@ export const TaskCard = ( { task }: { task: Task } ) => {
                 </Menu.Item>
 
                 <Menu.Item>
-                    <button type='button' className='block px-3 py-1 text-sm leading-6 text-red-500'>
+                    <button 
+                        onClick={() => mutate({ projectId: task.project, taskId: task._id })}
+                        type='button' className='block px-3 py-1 text-sm leading-6 text-red-500'>
                         Eliminar Tarea
                     </button>
                     </Menu.Item>

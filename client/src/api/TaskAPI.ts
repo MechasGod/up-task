@@ -42,3 +42,15 @@ export async function updateTask ( { projectId, taskId, draftTask }: UpdateTaskP
     console.log(error)
   }
 }
+
+export async function deleteTask ( { projectId, taskId }: { projectId: string, taskId: string } ) {
+  try {
+    
+    const { data } = await api.delete(`/projects/${projectId}/tasks/${taskId}`)
+
+    return data
+
+  } catch (error) {
+    console.log(error)
+  }
+}
