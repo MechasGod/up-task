@@ -82,7 +82,4 @@ router.delete("/:projectId/tasks/:id",
   TaskController.deleteTask
 )
 
-
-
-
 export default router 
