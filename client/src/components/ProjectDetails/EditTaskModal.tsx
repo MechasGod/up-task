@@ -4,7 +4,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { DraftTask } from '@/types/index';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getTaskById, updateTask } from '../../api/TaskAPI';
+import { getDraftTaskById, updateTask } from '../../api/TaskAPI';
 import { toast } from 'react-toastify';
 
 export default function EditTaskModal() {
@@ -24,13 +24,12 @@ export default function EditTaskModal() {
 
     const { data: currentTask } = useQuery({
         queryKey: ["taskId", editTaskParam],
-        queryFn: () => getTaskById(projectId!, editTaskParam!),
+        queryFn: () => getDraftTaskById(projectId!, editTaskParam!),
         enabled: !!editTaskParam 
         //enabled ejecuta el query si recibe true, en caso contrario no lo ejecuta
         //!! en JS convierte a true si un string tiene algo. Si esta vacio ("") regresa false
     }) 
 
-    console.log(currentTask)
 
     const { mutate } = useMutation({
         mutationFn: updateTask,

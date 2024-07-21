@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import AddTaskModal from '@/components/ProjectDetails/AddTaskModal';
 import { TaskList } from '@/components/ProjectDetails/TaskList';
 import EditTaskModal from '@/components/ProjectDetails/EditTaskModal';
+import TaskModalDetails from '@/components/ProjectDetails/TaskModalDetails';
 
 
 export const ProjectDetailsPage = () => {
@@ -31,6 +32,7 @@ export const ProjectDetailsPage = () => {
           Agregar Tarea
         </button>
 
+        <TaskModalDetails/>
         <EditTaskModal/>
         <AddTaskModal />
       </nav>

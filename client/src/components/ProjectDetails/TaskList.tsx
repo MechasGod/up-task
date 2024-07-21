@@ -23,7 +23,7 @@ const statusStyles: { [key: string]: string }  = {
 }
 
 //Este tipo de tipado se utiliza cuando el objeto puede tener indefinidaes llaves que son string
-const statusTranslations: { [key: string]: string } = { 
+export const statusTranslations: { [key: string]: string } = { 
   pending: "Pendiente",
   onHold: "En espera",
   inProgress: "En progreso",

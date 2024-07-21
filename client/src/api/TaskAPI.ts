@@ -1,5 +1,5 @@
 import api from "../lib/axios";
-import { DraftTask } from '../types/index';
+import { DraftTask, taskSchema } from '../types/index';
 
 export async function createTask ( { projectId, draftTask } : { projectId: string, draftTask: DraftTask} ) {
   try {
@@ -13,12 +13,28 @@ export async function createTask ( { projectId, draftTask } : { projectId: strin
   }
 }
 
-export async function getTaskById ( projectId: string, taskId: string ) {
+export async function getDraftTaskById ( projectId: string, taskId: string ) {
   try {
 
     const { data } = await api.get(`/projects/${projectId}/tasks/${taskId}`)
 
     return data   
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export async function getTaskById ( projectId: string, taskId: string ) {
+  try {
+
+    const { data } = await api.get(`/projects/${projectId}/tasks/${taskId}`)
+
+    const result = taskSchema.safeParse(data)
+
+    if (result.success) return result.data
+
+    console.log(result.error)
 
   } catch (error) {
     console.log(error)
@@ -43,6 +59,21 @@ export async function updateTask ( { projectId, taskId, draftTask }: UpdateTaskP
   }
 }
 
+export async function updateTaskStatus ( 
+  { projectId, taskId, status }: { projectId: string, taskId: string, status: string }
+) {
+  try {
+    
+    const { data } = await api.patch(`/projects/${projectId}/tasks/${taskId}`, { status })
+
+    return data
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+
 export async function deleteTask ( { projectId, taskId }: { projectId: string, taskId: string } ) {
   try {
     
@@ -54,3 +85,5 @@ export async function deleteTask ( { projectId, taskId }: { projectId: string, t
     console.log(error)
   }
 }
+
+
