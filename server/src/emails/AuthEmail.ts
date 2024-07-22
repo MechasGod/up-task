@@ -3,7 +3,8 @@ import { transport } from '../config/nodemailer';
 interface IData {
   user: string,
   email: string,
-  token: string
+  token: string,
+  userId: string
 }
 
 export class AuthEmail {
@@ -17,7 +18,7 @@ export class AuthEmail {
         html: `<p>UpTask - Hola ${data.user}, ya estas a un paso de crear tu cuenta en UpTask</p>
               <p>Todo casi listo, solo debes confirmar tu cuenta</p>
               <p>Visita el siguiente enlace: </p>
-              <a href="">Confirmar cuenta</a>
+              <a href="${process.env.FRONTEND_URL}/auth/confirm-account/${data.userId}">Confirmar cuenta</a>
               <p>E ingresa el siguiente código: <b>${data.token}</b> </p>
               <p>El código expira en 10 minutos!</p>
         `

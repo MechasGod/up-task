@@ -40,7 +40,8 @@ export class AuthController {
       AuthEmail.sendConfirmationEmail({
         user: newUser.name,
         email: newUser.email,
-        token: token.token
+        token: token.token,
+        userId: newUser.id
       })
      
       await Promise.allSettled([newUser.save(), token.save()])
@@ -99,6 +100,22 @@ export class AuthController {
 
     } catch (error) {
       res.json({error: "Hubo un error"}).status(500)
+    }
+  }
+
+  static getUserIdByEmail = async (req: Request, res: Response) => {
+    try {
+      
+      const { email } = req.params
+
+      const currentUser = await UserModel.findOne({ email })
+
+      if (!currentUser) return res.json("Usuario no encontrado").status(404)
+
+      res.json(currentUser.id).status(200)
+
+    } catch (error) {
+      res.json({ error: "Hubo un error" }).status(500)
     }
   }
 

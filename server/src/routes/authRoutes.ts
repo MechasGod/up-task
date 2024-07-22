@@ -16,15 +16,22 @@ authRouter.post("/create-account",
   body("password_confirmation").custom((value, { req }) => value === req.body.password)
     .withMessage("El password de confirmación no es igual"),
   handleErrors,
-  AuthController.createAccount )
+  AuthController.createAccount)
 
-  authRouter.patch(`/confirm-account/:userId`,
+authRouter.patch(`/confirm-account/:userId`,
     param("userId").isMongoId().withMessage("Id no valido"),
     body("token").notEmpty().withMessage("El token no puede ir vacio").isLength({ min: 6, max: 6 })
       .withMessage("Token no valido"),
     handleErrors,
-    AuthController.confirmateAccount
-  )
+    AuthController.confirmateAccount)
+
+authRouter.get("/getUserIdByEmail/:email", 
+  param("email").notEmpty().withMessage("Debe incluir un email").isEmail().withMessage("Email no valido"),
+  handleErrors,
+  AuthController.getUserIdByEmail
+ )
+
+
 
 
 export default authRouter
