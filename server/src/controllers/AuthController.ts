@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import UserModel from '../models/auth';
 import bcrypt from "bcrypt"
 import { TokenModel } from '../models/token';
-import { generateToken } from '../utils/token';
+import { comparePasswords, generateToken } from '../utils/token';
 import { AuthEmail } from '../emails/AuthEmail';
 
 export class AuthController {
@@ -74,6 +74,28 @@ export class AuthController {
       await Promise.allSettled([currentUser.save(), userToken.deleteOne()])
 
       res.json("Usuario confirmado correctamente").status(200)
+
+    } catch (error) {
+      res.json({error: "Hubo un error"}).status(500)
+    }
+  }
+
+  static login = async (req: Request, res: Response) => {
+    try {
+      
+      const { email, password } = req.body
+
+      const currentUser = await UserModel.findOne({ email })
+
+      if (!currentUser) return res.json("Usuario no encontrado").status(404)
+      if (!currentUser.confirmed) return res.json("Esta cuenta no esta confirmada").status(401)
+      
+      
+      const isCorrectPassword = await comparePasswords(password, currentUser.password)
+
+      if (!isCorrectPassword) return res.json({ login: false, msg: "Acceso denegado, usuario o contraseña incorrectos" })
+      
+      res.json({ login: true, msg: "Acceso exitoso" })
 
     } catch (error) {
       res.json({error: "Hubo un error"}).status(500)
