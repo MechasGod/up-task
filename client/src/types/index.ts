@@ -35,3 +35,16 @@ export type DraftProject = Omit<Project, "_id">
 export type Projects = z.infer<typeof projectsSchema>
 
 export const projectsSchema = z.array(projectSchema)
+
+//Auth
+
+
+export const userSignUpSchema = z.object({
+  email: z.string(),
+  name: z.string(),
+  password: z.string(),
+  password_confirmation: z.string(),
+})
+
+export type UserSignUp = z.infer<typeof userSignUpSchema>
+export type UserLoginForm = Pick<UserSignUp, "email" | "password">
