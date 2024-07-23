@@ -14,10 +14,10 @@ export default function AddTaskModal() {
     
     const queryClient = useQueryClient()
 
-    const { search } = useLocation()
     const { projectId } = useParams()
-    const queryParams = new URLSearchParams(search)
     
+    const { search } = useLocation()
+    const queryParams = new URLSearchParams(search)
     const newTaskParam = queryParams.get("newTask")
     const newTask = newTaskParam ? true : false
 

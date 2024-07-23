@@ -10,6 +10,7 @@ export default function AuthLoginPage() {
   }
   const { register, handleSubmit, formState: { errors } } = useForm({ defaultValues: initialValues })
 
+  
   const handleLogin = (formData: UserLoginForm) => { }
 
   return (
@@ -72,10 +73,16 @@ export default function AuthLoginPage() {
           className="bg-purple-400 hover:bg-purple-500 w-full p-2 transition-colors text-white font-black text-xl cursor-pointer"
         />
 
-        <p className="text-gray-400 text-center">
-          ¿No tienes cuenta?   
-          <Link className="text-purple-400 hover:text-purple-500 transition-colors" to="/auth/signup"> Creala aqui</Link>
-        </p>
+        <div className="space-y-2">
+          <p className="text-gray-400 text-center">
+            ¿No tienes cuenta?   
+            <Link className="text-purple-400 hover:text-purple-500 transition-colors" to="/auth/signup"> Creala aqui</Link>
+          </p>
+          <p className="text-gray-400 text-center">
+            ¿Olvidaste tu contraseña? {" "}
+            <Link to="/auth/forgot-password" className="text-purple-400 hover:text-purple-500 transition-colors">Recuperala aqui</Link>
+          </p>
+        </div>
       </form>
     </>
   )

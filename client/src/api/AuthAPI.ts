@@ -55,4 +55,39 @@ export async function getNewAuthCode ( userId: string ) {
     console.log(error)
   }
 }
+
+export async function forgotPasword ( email: string ) {
+  try {
+
+    const { data: response } = await api.post(`/auth/forgot-password`, { email })  
+    
+    return response
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+interface RestorePassData {
+  userId: string,
+  token: string,
+  password: string,
+  confirm_password: string
+}
+
+export async function restorePassword ( data: RestorePassData ) {
+  try {
+
+    const { data: response } = await api.patch(`/auth/restore-password/${data.userId}`, {
+      token: data.token,
+      password: data.password,
+      confirm_password: data.confirm_password
+    })  
+    
+    return response
+
+  } catch (error) {
+    console.log(error)
+  }
+}
  

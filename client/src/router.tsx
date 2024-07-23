@@ -8,6 +8,8 @@ import { AuthLayout } from './layouts/auth/AuthLayout';
 import AuthLoginPage from './pages/Auth/AuthLogin';
 import AuthSignupPage from './pages/Auth/AuthSignup';
 import AuthConfirmAccPage from './pages/Auth/AuthConfirmAcc';
+import { ForgotPasswordPage } from './pages/Auth/ForgotPassword';
+import { SendEmailPage } from './pages/Auth/SendEmail';
 
 
 export const Router = () => {
@@ -26,6 +28,9 @@ export const Router = () => {
             <Route path="/auth/login" element={<AuthLoginPage />} />
             <Route path="/auth/signup" element={<AuthSignupPage />} />
             <Route path="/auth/confirm-account/:userId" element={<AuthConfirmAccPage />} />
+            <Route path="/auth/forgot-password" element={<SendEmailPage />} />
+            <Route path="/auth/forgot-password/:userId" element={<ForgotPasswordPage />} />
+
 
           </Route>
         </Routes>
