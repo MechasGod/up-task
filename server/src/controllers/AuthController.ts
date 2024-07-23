@@ -150,7 +150,68 @@ export class AuthController {
       res.json({ success: true, msg:"Código enviado al correo correctamente" }).status(200)
       
     } catch (error) {
-      console.log(error)
+      res.json({ error: "Hubo un error" }).status(500)
+    }
+  }
+
+  static forgotPassword = async (req: Request, res: Response) => {
+    try {
+      
+      const { email: reqEmail } = req.body
+
+      const currentUser = await UserModel.findOne({ email: reqEmail })
+
+      if (!currentUser) return res.json({ success: false, msg: "El usuario no existe, verifique el correo" }).status(404)
+      if (!currentUser.confirmed) return res.json({ success: false, msg: "Cuenta no confirmada, verifique el correo" }).status(409)
+
+      
+
+      const newToken = new TokenModel({
+        token: generateToken(),
+        user: currentUser.id
+      })
+
+      await newToken.save()
+
+      AuthEmail.sendReqPasswordEmail({
+        email: currentUser.email,
+        token: newToken.token,
+        user: currentUser.name,
+        userId: currentUser.id
+      })     
+      
+      res.json({ success: true, msg: "Correo de restablecimiento enviado correctamente" })
+
+    } catch (error) {
+      res.json({ error: "Hubo un error" }).status(500)
+    }
+  }
+
+  static restorePassword = async (req: Request, res: Response) => {
+    try {
+      
+      const { userId } = req.params
+      const { token: reqToken, password: newPassword } = req.body
+
+      const currentUser = await UserModel.findOne({ _id: userId })
+
+      if (!currentUser) return res.json({ sucess: false, msg: "Usuario no encontrado" }).status(404)
+    
+      const currentToken = await TokenModel.findOne({ token: reqToken })
+
+      if (!currentToken) return res.json({ success: false, msg: "Este enlace ha caducado" })
+
+      const salt = await bcrypt.genSalt(10) 
+      const hashedPassword = await bcrypt.hash(newPassword, salt)  
+      
+      currentUser.password = hashedPassword
+      
+      await Promise.allSettled([ currentUser.save(), currentToken.deleteOne() ])
+
+      res.json({ success: true, msg: "Contraseña restablecida con exito" })
+
+    } catch (error) {
+      res.json({ error: "Hubo un error" }).status(500)
     }
   }
 

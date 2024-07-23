@@ -37,6 +37,21 @@ authRouter.get("/getNewAuthCode/:userId",
   AuthController.getNewAuthToken
  )
 
+authRouter.post("/forgot-password",
+  body("email").notEmpty().withMessage("El email del usuario no debe ir vacio").isEmail().withMessage("Correo no valido"),
+  handleErrors,
+  AuthController.forgotPassword
+)
+
+authRouter.patch("/restore-password/:userId",
+  param("userId").notEmpty().withMessage("El id del usuario no debe ir vacio").isMongoId().withMessage("Id no valido"),
+  body("token").notEmpty().withMessage("El token no debe ir vacio").isLength({ min: 6, max: 6 }).withMessage("Token no valido"),
+  body("password").notEmpty().withMessage("El password no debe ir vacio").isLength({ min: 8 }),
+  body("confirm_password").notEmpty().withMessage("El password de confirmacion no puede ir vacio")
+    .custom((value, { req }) => value === req.body.password ).withMessage("Los passwords no coinciden"),
+  handleErrors,
+  AuthController.restorePassword
+)
 
 
 export default authRouter
