@@ -2,7 +2,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { PinInput, PinInputField } from "@chakra-ui/pin-input"
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { confirmAccount } from "../../api/AuthAPI";
+import { confirmAccount, getNewAuthCode } from "../../api/AuthAPI";
 import { toast } from 'react-toastify';
 
 export default function AuthConfirmAccPage() {
@@ -13,7 +13,7 @@ export default function AuthConfirmAccPage() {
 
   const { userId } = useParams()
 
-  const { mutate } = useMutation({
+  const { mutate: confirmAccMutate } = useMutation({
     mutationFn: confirmAccount,
     onError: (error) => {
       toast.error("Ha habido un error, intentelo más tarde")
@@ -21,6 +21,21 @@ export default function AuthConfirmAccPage() {
     },
     onSuccess: ( data ) => {
       if (data.auth) {
+        navigate("/auth/login")
+        toast.success(data.msg)
+        
+      } else toast.error(data.msg)
+    }
+  })
+
+  const { mutate: newAuthCodeMutation } = useMutation({
+    mutationFn: getNewAuthCode,
+    onError: (error) => {
+      toast.error("Ha habido un error, intentelo más tarde")
+      console.log(error)
+    },
+    onSuccess: ( data ) => {
+      if (data.success) {
         navigate("/auth/login")
         toast.success(data.msg)
         
@@ -44,7 +59,7 @@ export default function AuthConfirmAccPage() {
         <div className="flex justify-center gap-5">
           <PinInput value={input} onChange={input => setInput(input)} 
             onComplete={token => {
-              mutate({ userId: userId!, token: token }) 
+              confirmAccMutate({ userId: userId!, token: token }) 
             }}>
             <PinInputField className="w-10 h-10 p-3 rounded-lg border-gray-400 border placeholder-white"/>
             <PinInputField className="w-10 h-10 p-3 rounded-lg border-gray-400 border placeholder-white"/>
@@ -59,12 +74,12 @@ export default function AuthConfirmAccPage() {
       </form>
 
       <nav className="mt-10 flex flex-col space-y-4">
-        <Link
-          to='/auth/new-code'
+        <button
+          onClick={() => newAuthCodeMutation(userId!)}
           className="text-center text-gray-300 font-normal"
         >
           Solicitar un nuevo Código
-        </Link>
+        </button>
       </nav>
 
     </>

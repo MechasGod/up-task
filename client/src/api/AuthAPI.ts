@@ -44,3 +44,15 @@ export async function confirmAccount ( { userId, token }: { userId: string, toke
   }
 }
 
+export async function getNewAuthCode ( userId: string ) {
+  try {
+    
+    const { data: response } = await api.get(`/auth/getNewAuthCode/${userId}`)
+
+    return response
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+ 

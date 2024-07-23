@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { UserSignUp } from "@/types/index";
 import { Link, useNavigate } from 'react-router-dom';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createAccount, getUserIdByEmail } from '../../api/AuthAPI';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
@@ -16,6 +16,7 @@ export default function AuthSignupPage() {
   }
 
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   const [ isSubmitTriggered, setIsSubmitTriggered ] = useState<boolean>(false)
   
@@ -38,6 +39,7 @@ export default function AuthSignupPage() {
   if (userId) {
     reset()
     setIsSubmitTriggered(false)
+    queryClient.invalidateQueries({ queryKey: [ "userId", email ] })
     navigate(`/auth/confirm-account/${userId}`)
   }
 
