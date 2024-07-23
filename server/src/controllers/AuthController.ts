@@ -57,24 +57,24 @@ export class AuthController {
     try {
       const { token: reqToken } = req.body
       const { userId } = req.params
-
+      
       const currentUser = await UserModel.findOne({ _id: userId })
 
-      if (!currentUser) return res.json("Usuario no encontrado").status(404)
+      if (!currentUser) return res.json({ auth: false, msg: "Usuario no encontrado" }).status(404)
         
       const userToken = await TokenModel.findOne({ user: userId })
       //En este caso no hay que hacer conversiones a string de los ObjectsId, mongoose las hace automaticamente
       //cuando se trata de filtros como el de find o findOne
 
-      if (!userToken) return res.json("El usuario no tiene tokens activos").status(409)
+      if (!userToken) return res.json({ auth: false, msg: "El token no está activo o a expirado" }).status(409)
 
       if (userToken.token === reqToken ) {
         currentUser.confirmed = true
-      } else return res.json("El token es incorrecto").status(409)
+      } else return res.json({ auth: false, msg:"El token es incorrecto" }).status(409)
 
       await Promise.allSettled([currentUser.save(), userToken.deleteOne()])
 
-      res.json("Usuario confirmado correctamente").status(200)
+      res.json({ auth: true, msg: "Usuario confirmado correctamente" }).status(200)
 
     } catch (error) {
       res.json({error: "Hubo un error"}).status(500)
@@ -116,6 +116,41 @@ export class AuthController {
 
     } catch (error) {
       res.json({ error: "Hubo un error" }).status(500)
+    }
+  }
+
+  static getNewAuthToken = async (req: Request, res: Response) => {
+    try {
+      
+      const { userId } = req.params
+
+      const currentUser = await UserModel.findOne({ _id: userId })
+      //usar el _id para estas comparaciones
+
+      if (!currentUser) return res.json({ sucess: false, msg: "Usuario no encontrado" }).status(404)
+
+      const userHasToken = await TokenModel.findOne({ user: userId })
+
+      if (userHasToken) return res.json({ success: false, msg: "Ya hay un token activo de esta cuenta, verificar email" }).status(409)
+
+      const newToken = new TokenModel({
+        token: generateToken(),
+        user: userId
+      })
+
+      await newToken.save()
+
+      AuthEmail.sendConfirmationEmail({
+        user: currentUser.name,
+        email: currentUser.email,
+        token: newToken.token,
+        userId: currentUser.id
+      })
+
+      res.json({ success: true, msg:"Código enviado al correo correctamente" }).status(200)
+      
+    } catch (error) {
+      console.log(error)
     }
   }
 

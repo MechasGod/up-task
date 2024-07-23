@@ -13,7 +13,7 @@ export class AuthEmail {
       await transport.sendMail({
         from: "UpTask <upTaskAdmin@gmail.com>",
         to: data.email,
-        subject: "UpTask - Verificación de la cuenta",
+        subject: "UpTask - Verificación de la cuenta (Reenvio de código)",
         text: `UpTask - Confirma tu cuente`,
         html: `<p>UpTask - Hola ${data.user}, ya estas a un paso de crear tu cuenta en UpTask</p>
               <p>Todo casi listo, solo debes confirmar tu cuenta</p>

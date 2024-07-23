@@ -31,6 +31,11 @@ authRouter.get("/getUserIdByEmail/:email",
   AuthController.getUserIdByEmail
  )
 
+authRouter.get("/getNewAuthCode/:userId",
+  param("userId").notEmpty().withMessage("El id del usuario no debe ir vacio").isMongoId().withMessage("Id no valido"),
+  handleErrors,
+  AuthController.getNewAuthToken
+ )
 
 
 
