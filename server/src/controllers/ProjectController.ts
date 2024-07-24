@@ -6,7 +6,8 @@ export class ProjectController {
   static getAllProjects = async (req: Request, res: Response) => {
     try {
 
-      const projects = await ProjectModel.find({})
+      const projects = await ProjectModel.find({ manager: req.user.id })
+
       res.json(projects)
 
     } catch (error) {
@@ -20,8 +21,12 @@ export class ProjectController {
       // const project = new ProjectModel(req.body) //instancia del modelo de proyecto 
 
       // await project.save()
-
-      await ProjectModel.create(req.body) //otra manera de crearlo y guardarlo automaticamente
+      
+      //Manager 
+      await ProjectModel.create({
+        ...req.body,
+        manager: req.user
+      }) //otra manera de crearlo y guardarlo automaticamente
 
       res.send("Proyecto creado correctamente")
 
@@ -35,6 +40,10 @@ export class ProjectController {
     try {
       
       const project = await ProjectModel.findById(id).populate("tasks")
+
+      if (project.manager.toString() !== req.user.id.toString()) {
+        return res.json({ error: "Proyecto no encontrado" }).status(404)
+      }
 
       if (!project) return res.status(404).json({error: "Proyecto no encontrado"})
 
@@ -54,6 +63,10 @@ export class ProjectController {
       //OJO esto es solo para poder mostrarlo en la respuesta del json
 
       if (!project) return res.status(404).json({error: "Proyecto no encontrado"})
+
+      if (project.manager.toString() !== req.user.id.toString()) {
+          return res.json({ error: "Proyecto no encontrado" }).status(404)
+      }
         
       await project.save()
       
@@ -71,6 +84,10 @@ export class ProjectController {
       const project = await ProjectModel.findByIdAndDelete(id)
 
       if (!project) return res.status(404).json({error: "Proyecto no encontrado"})
+
+      if (project.manager.toString() !== req.user.id.toString()) {
+          return res.json({ error: "Proyecto no encontrado" }).status(404)
+      }
 
       res.send("Proyecto eliminado correctamente")
 

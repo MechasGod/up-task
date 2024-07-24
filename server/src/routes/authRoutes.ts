@@ -2,6 +2,7 @@ import { Router } from "express"
 import { body, param } from "express-validator"
 import { handleErrors } from '../middlewares/validation';
 import { AuthController } from '../controllers/AuthController';
+import { authenticate } from '../middlewares/jwtAuth';
 
 const authRouter = Router()
 
@@ -17,6 +18,12 @@ authRouter.post("/create-account",
     .withMessage("El password de confirmación no es igual"),
   handleErrors,
   AuthController.createAccount)
+
+authRouter.post("/login",
+  body("email").notEmpty().withMessage("El email no debe ir vacío!").isEmail().withMessage("Email no valido"),
+  body("password").notEmpty().withMessage("La contraseña no debe ir vacía"),
+  handleErrors,
+  AuthController.login)
 
 authRouter.patch(`/confirm-account/:userId`,
     param("userId").isMongoId().withMessage("Id no valido"),
@@ -52,6 +59,11 @@ authRouter.patch("/restore-password/:userId",
   handleErrors,
   AuthController.restorePassword
 )
+
+authRouter.get("/user",
+  authenticate,
+  AuthController.user
+ )
 
 
 export default authRouter

@@ -4,6 +4,7 @@ import bcrypt from "bcrypt"
 import { TokenModel } from '../models/token';
 import { comparePasswords, generateToken } from '../utils/token';
 import { AuthEmail } from '../emails/AuthEmail';
+import { generateJWT } from '../utils/jwt';
 
 export class AuthController {
 
@@ -88,15 +89,17 @@ export class AuthController {
 
       const currentUser = await UserModel.findOne({ email })
 
-      if (!currentUser) return res.json("Usuario no encontrado").status(404)
-      if (!currentUser.confirmed) return res.json("Esta cuenta no esta confirmada").status(401)
+      if (!currentUser) return res.json({ login: false, msg: "Esta cunta no existe" }).status(404)
+      if (!currentUser.confirmed) return res.json({ login: false, msg:"Esta cuenta no esta confirmada" }).status(401)
       
       
       const isCorrectPassword = await comparePasswords(password, currentUser.password)
 
       if (!isCorrectPassword) return res.json({ login: false, msg: "Acceso denegado, usuario o contraseña incorrectos" })
       
-      res.json({ login: true, msg: "Acceso exitoso" })
+      const token = generateJWT({ id: currentUser.id })
+      
+      res.json({ login: true, token }).status(200)
 
     } catch (error) {
       res.json({error: "Hubo un error"}).status(500)
@@ -213,6 +216,10 @@ export class AuthController {
     } catch (error) {
       res.json({ error: "Hubo un error" }).status(500)
     }
+  }
+
+  static user = (req: Request, res: Response) => {
+    return res.json(req.user).status(200)
   }
 
 }

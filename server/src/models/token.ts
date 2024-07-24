@@ -17,7 +17,7 @@ const tokenSchema: Schema = new Schema({
     required: true,
     ref: "User"
   },
-  createdAt: {
+  expiresAt: {
     type: Date,
     default: Date.now(), //al habilitarlo de esta forma nos habilita la propeidad expires que lo elimina automaticamente
     //dependiendo del tiempo que se le de

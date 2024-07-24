@@ -5,24 +5,28 @@ import { handleErrors } from '../middlewares/validation';
 import { TaskController } from '../controllers/TaskController';
 import { ValidateProjectExists } from '../middlewares/project';
 import { ValidateTaskExists } from '../middlewares/task';
+import { authenticate } from '../middlewares/jwtAuth';
 
 const router = Router()
 
 router.post("/",
+  authenticate,
   body("projectName").notEmpty().withMessage("El nombre del proyecto es obligatorio"),
   body("clientName").notEmpty().withMessage("El nombre del proyecto es obligatorio"),
   body("description").notEmpty().withMessage("El nombre del proyecto es obligatorio"),
   handleErrors,
   ProjectController.createProject )
 
-router.get("/", ProjectController.getAllProjects)
+router.get("/", authenticate, ProjectController.getAllProjects)
 
-router.get("/:id", 
+router.get("/:id",
+  authenticate, 
   param("id").isMongoId().withMessage("Id no valida"), 
   handleErrors,
   ProjectController.getProjectById )
 
 router.put("/:id", 
+  authenticate,
   body("projectName").notEmpty().withMessage("El nombre del proyecto es obligatorio"),
   body("clientName").notEmpty().withMessage("El nombre del proyecto es obligatorio"),
   body("description").notEmpty().withMessage("El nombre del proyecto es obligatorio"),
@@ -32,6 +36,7 @@ router.put("/:id",
 )
 
 router.delete("/:id",
+  authenticate,
   param("id").isMongoId().withMessage("Id no valido"),
   handleErrors,
   ProjectController.deleteProject
