@@ -91,3 +91,19 @@ export async function restorePassword ( data: RestorePassData ) {
   }
 }
  
+export async function login ( { email, password }: { email: string, password: string } ) {
+  try {
+    
+    const { data: response } = await api.post(`/auth/login`, { email, password })
+    localStorage.setItem("AUTH_TOKEN", response.token) 
+    return response
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export async function getUserData () {
+  const { data: response } = await api("/auth/user")
+  return response
+}

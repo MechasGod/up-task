@@ -5,9 +5,12 @@ import { ProjectsRender } from '@/components/Dashboard/ProjectsRender';
 
 export const DashboardPage = () => {
 
+  const isAuth = localStorage.getItem("AUTH_TOKEN") ? true : false
+
   const { data, isError, isLoading } = useQuery({
     queryKey: ["projects"],
-    queryFn: getAllProjects
+    queryFn: getAllProjects,
+    enabled: isAuth
   })
 
   if (isLoading) return (<h1 className="text-center font-bold text-3xl">Cargando...</h1>)

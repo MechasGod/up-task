@@ -1,10 +1,27 @@
-import { Link, Outlet } from "react-router-dom"
+import { Link, Outlet, useNavigate } from "react-router-dom"
 import { Logo } from '../../components/Logo';
 import NavMenu from '@/components/NavMenu';
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css"
+import { useQuery } from '@tanstack/react-query';
+import { getUserData } from '../../api/AuthAPI';
 
 export const MainLayout = () => {
+
+  const navigate = useNavigate()
+
+  const { data: currentUser, isError, isLoading } = useQuery({
+    queryKey: [ "currentUser" ],
+    queryFn: getUserData,
+    retry: 1,
+    refetchOnWindowFocus: false,
+
+  })
+
+  if (isLoading) return ( <h1>Cargando...</h1> )
+  if (isError) navigate("/auth/login")
+  if (currentUser.error) navigate("/auth/login")
+  
   return (
     <>
       <header className="bg-gray-800 py-5">
@@ -15,7 +32,7 @@ export const MainLayout = () => {
                 <Logo /> 
               </Link>
             </div>
-            <NavMenu />
+            <NavMenu name={currentUser.name}/>
 
           </div>
       

@@ -21,9 +21,14 @@ export async function createProject( formData: DraftProject ) {
 }
 
 export async function getAllProjects() {
+  const authToken = localStorage.getItem("AUTH_TOKEN")
   try {
     
-    const { data } = await api.get("/projects")
+    const { data } = await api.get("/projects", { 
+      headers: {
+        Authorization: `Bearer ${authToken}`
+      }
+     })
 
     const result = projectsSchema.safeParse(data)
 
@@ -37,9 +42,10 @@ export async function getAllProjects() {
 }
 
 export async function getProjectById( id: string ) {
+  const token = localStorage.getItem("AUTH_TOKEN")
   try {
     
-    const { data } = await api.get(`/projects/${id}`)
+    const { data } = await api.get(`/projects/${id}`, { headers: { Authorization: `Bearer ${token}` } })
 
     const result = projectSchema.safeParse(data)
 
