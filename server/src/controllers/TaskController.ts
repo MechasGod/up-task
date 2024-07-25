@@ -1,7 +1,5 @@
 import { Request, Response } from 'express'
-import ProjectModel from '../models/project';
 import TaskModel, { TaskType } from '../models/task';
-import { Model } from 'mongoose';
 
 export class TaskController {
 

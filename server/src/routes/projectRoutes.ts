@@ -6,6 +6,7 @@ import { TaskController } from '../controllers/TaskController';
 import { ValidateProjectExists } from '../middlewares/project';
 import { ValidateTaskExists } from '../middlewares/task';
 import { authenticate } from '../middlewares/jwtAuth';
+import { TeamController } from '../controllers/TeamController';
 
 const router = Router()
 
@@ -41,6 +42,7 @@ router.delete("/:id",
   handleErrors,
   ProjectController.deleteProject
  )
+
 
 //task routes
 
@@ -86,5 +88,34 @@ router.delete("/:projectId/tasks/:id",
   ValidateTaskExists,
   TaskController.deleteTask
 )
+
+//teams
+
+router.get("/:projectId/team",
+  authenticate,
+  handleErrors,
+  TeamController.getProjectMembers
+ )
+
+router.get("/:projectId/team/:email",
+  authenticate,
+  param("email").notEmpty().withMessage("Email requerido").isEmail().withMessage("Email no valido").toLowerCase(),
+  handleErrors,
+  TeamController.findMemberByEmail
+)
+
+router.post("/:projectId/team",
+  authenticate,
+  body("id").isMongoId().withMessage("Id no valido").notEmpty().withMessage("Id requerido"),
+  handleErrors,
+  TeamController.addMemberById
+ )
+
+router.delete("/:projectId/team", 
+  authenticate,
+  body("id").isMongoId().withMessage("Id no valido").notEmpty().withMessage("Id requerido"),
+  handleErrors,
+  TeamController.deleteMemberById
+ )
 
 export default router 
