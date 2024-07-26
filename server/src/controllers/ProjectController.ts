@@ -6,7 +6,14 @@ export class ProjectController {
   static getAllProjects = async (req: Request, res: Response) => {
     try {
 
-      const projects = await ProjectModel.find({ manager: req.user.id })
+      const userId = req.user.id
+
+      const projects = await ProjectModel.find({
+        $or: [
+          { manager: userId },
+          { team: { $in: [userId] } }
+        ]
+      });
 
       res.json(projects)
 
@@ -41,7 +48,8 @@ export class ProjectController {
       
       const project = await ProjectModel.findById(id).populate("tasks")
 
-      if (project.manager.toString() !== req.user.id.toString()) {
+      if (project.manager.toString() !== req.user.id.toString() && !(project.team.some(member => member.toString() === req.user.id)) ) {
+        console.log("No es del proyecto")
         return res.json({ error: "Proyecto no encontrado" }).status(404)
       }
 

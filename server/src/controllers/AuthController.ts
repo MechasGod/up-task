@@ -89,7 +89,7 @@ export class AuthController {
 
       const currentUser = await UserModel.findOne({ email })
 
-      if (!currentUser) return res.json({ login: false, msg: "Esta cunta no existe" }).status(404)
+      if (!currentUser) return res.json({ login: false, msg: "Esta cuenta no existe" }).status(404)
       if (!currentUser.confirmed) return res.json({ login: false, msg:"Esta cuenta no esta confirmada" }).status(401)
       
       

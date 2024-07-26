@@ -46,7 +46,7 @@ export class TeamController {
   static deleteMemberById = async (req: Request, res: Response) => {
     try {
       
-      const { id } = req.body
+      const { id } = req.params
 
       const currentUser = await UserModel.findById(id).select("id")
 
@@ -60,7 +60,7 @@ export class TeamController {
 
       await req.project.save()
 
-      res.json({ sucess: true, msg: "Miembro eliminado correctamente" })
+      res.json({ success: true, msg: "Miembro eliminado correctamente" })
 
     } catch (error) {
       res.json({ success: false, msg: error.message  }).status(500)
