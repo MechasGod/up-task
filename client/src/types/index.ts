@@ -48,3 +48,6 @@ export const userSignUpSchema = z.object({
 
 export type UserSignUp = z.infer<typeof userSignUpSchema>
 export type UserLoginForm = Pick<UserSignUp, "email" | "password">
+export type UserDisplay = Pick<UserSignUp, "email" | "name"> & {
+  _id: string
+}

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getAllProjects } from '../api/ProjectAPI';
 import { ProjectsRender } from '@/components/Dashboard/ProjectsRender';
@@ -7,6 +7,8 @@ export const DashboardPage = () => {
 
   const isAuth = localStorage.getItem("AUTH_TOKEN") ? true : false
 
+  const navigate = useNavigate()
+
   const { data, isError, isLoading } = useQuery({
     queryKey: ["projects"],
     queryFn: getAllProjects,
@@ -14,7 +16,7 @@ export const DashboardPage = () => {
   })
 
   if (isLoading) return (<h1 className="text-center font-bold text-3xl">Cargando...</h1>)
-  if (isError) return (<h1 className="text-center font-bold text-3xl">Ha habido un error...</h1>)
+  if (isError) navigate("/auth/login")
 
   return (
     <>

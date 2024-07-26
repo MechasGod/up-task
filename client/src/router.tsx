@@ -10,6 +10,7 @@ import AuthSignupPage from './pages/Auth/AuthSignup';
 import AuthConfirmAccPage from './pages/Auth/AuthConfirmAcc';
 import { ForgotPasswordPage } from './pages/Auth/ForgotPassword';
 import { SendEmailPage } from './pages/Auth/SendEmail';
+import { ProjectTeamPage } from './pages/ProjectTeamPage';
 
 
 export const Router = () => {
@@ -22,6 +23,8 @@ export const Router = () => {
             <Route path="/projects/create" element={<CreateProjectPage />}/>
             <Route path="/projects/:projectId/edit" element={<EditProjectPage />}/>
             <Route path="/projects/:projectId" element={<ProjectDetailsPage />}/>
+            <Route path="/projects/:projectId/team" element={<ProjectTeamPage />}/>
+
 
           </Route>
           <Route element={<AuthLayout/>}>
@@ -30,8 +33,6 @@ export const Router = () => {
             <Route path="/auth/confirm-account/:userId" element={<AuthConfirmAccPage />} />
             <Route path="/auth/forgot-password" element={<SendEmailPage />} />
             <Route path="/auth/forgot-password/:userId" element={<ForgotPasswordPage />} />
-
-
           </Route>
         </Routes>
       </BrowserRouter>

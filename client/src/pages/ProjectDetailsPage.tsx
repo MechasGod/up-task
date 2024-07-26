@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { getProjectById } from '../api/ProjectAPI';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import AddTaskModal from '@/components/ProjectDetails/AddTaskModal';
 import { TaskList } from '@/components/ProjectDetails/TaskList';
 import EditTaskModal from '@/components/ProjectDetails/EditTaskModal';
@@ -31,6 +31,11 @@ export const ProjectDetailsPage = () => {
           className="bg-purple-400 hover:bg-purple-500 px-10 py-3 text-white text-xl font-bold cursor-pointer transition-colors">
           Agregar Tarea
         </button>
+
+        <Link 
+          to={`/projects/${currentProject?._id}/team`}
+          className="bg-purple-400 hover:bg-purple-500 px-10 py-3 text-white text-xl font-bold cursor-pointer transition-colors"
+        >Colaboradores</Link>
 
         <TaskModalDetails/>
         <EditTaskModal/>
