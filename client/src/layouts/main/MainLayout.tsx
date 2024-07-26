@@ -3,20 +3,13 @@ import { Logo } from '../../components/Logo';
 import NavMenu from '@/components/NavMenu';
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css"
-import { useQuery } from '@tanstack/react-query';
-import { getUserData } from '../../api/AuthAPI';
+import { useAuthUser } from '@/hooks/useAuthUser';
 
 export const MainLayout = () => {
 
   const navigate = useNavigate()
 
-  const { data: currentUser, isError, isLoading } = useQuery({
-    queryKey: [ "currentUser" ],
-    queryFn: getUserData,
-    retry: 1,
-    refetchOnWindowFocus: false,
-
-  })
+  const { currentUser, isError, isLoading } = useAuthUser()
 
   if (isLoading) return ( <h1>Cargando...</h1> )
   if (isError) navigate("/auth/login")
@@ -51,3 +44,5 @@ export const MainLayout = () => {
 
   )
 }
+
+

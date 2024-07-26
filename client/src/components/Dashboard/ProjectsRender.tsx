@@ -7,8 +7,11 @@ import { useMutation } from '@tanstack/react-query';
 import { deleteProject } from "../../api/ProjectAPI";
 import { toast } from "react-toastify"
 import { useQueryClient } from '@tanstack/react-query';
+import { useAuthUser } from '@/hooks/useAuthUser';
 
 export const ProjectsRender = ({ data }: { data: Projects | undefined } ) => {
+
+    const { currentUser } = useAuthUser()
 
     const queryClient = useQueryClient()
     const { mutate } = useMutation({
@@ -30,9 +33,18 @@ export const ProjectsRender = ({ data }: { data: Projects | undefined } ) => {
         <li key={project._id} className="flex justify-between gap-x-6 px-5 py-10">
             <div className="flex min-w-0 gap-x-4">
                 <div className="min-w-0 flex-auto space-y-2">
-                    <Link to={`/projects/${project._id}`}
-                        className="text-gray-600 cursor-pointer hover:underline text-3xl font-bold"
-                    >{project.projectName}</Link>
+                    <div className="flex items-center space-x-5">
+                        <Link to={`/projects/${project._id}`}
+                            className="text-gray-600 cursor-pointer hover:underline text-3xl font-bold"
+                            >{project.projectName}</Link>
+                            {
+                                project.manager === currentUser._id ? (
+                                    <p className="bg-red-500 text-red-50 rounded-lg  py-2 px-6 font-bold text-sm">Manager</p>
+                                ) : (
+                                    <p className="bg-indigo-500 rounded-lg text-indigo-50 py-2 px-6 font-bold text-sm">Colaborador</p>
+                                )
+                            }
+                    </div>
                     <p className="text-sm text-gray-400">
                         Cliente: {project.clientName}
                     </p>
@@ -61,12 +73,17 @@ export const ProjectsRender = ({ data }: { data: Projects | undefined } ) => {
                                     </Link>
                                 </Menu.Item>
                                 <Menu.Item>
+                                    { currentUser._id === project.manager ? 
+                                    (
                                     <Link to={`/projects/${project._id}/edit`}
                                         className='block px-3 py-1 text-sm leading-6 text-gray-900'>
                                     Editar Proyecto
                                     </Link>
+
+                                    ) : (<></>) }
                                 </Menu.Item>
                                 <Menu.Item>
+                                    { currentUser._id === project.manager ? (
                                     <button 
                                         type='button' 
                                         className='block px-3 py-1 text-sm leading-6 text-red-500'
@@ -74,6 +91,7 @@ export const ProjectsRender = ({ data }: { data: Projects | undefined } ) => {
                                     >
                                         Eliminar Proyecto
                                     </button>
+                                    ) : (<></>)}
                                 </Menu.Item>
                         </Menu.Items>
                     </Transition>

@@ -5,9 +5,12 @@ import AddTaskModal from '@/components/ProjectDetails/AddTaskModal';
 import { TaskList } from '@/components/ProjectDetails/TaskList';
 import EditTaskModal from '@/components/ProjectDetails/EditTaskModal';
 import TaskModalDetails from '@/components/ProjectDetails/TaskModalDetails';
+import { useAuthUser } from '@/hooks/useAuthUser';
 
 
 export const ProjectDetailsPage = () => {
+
+  const { currentUser } = useAuthUser()
 
   const { projectId } = useParams()
   const navigate = useNavigate()
@@ -15,6 +18,8 @@ export const ProjectDetailsPage = () => {
     queryKey: ["projectById", projectId],
     queryFn: () => getProjectById(projectId!),
   })
+
+  
 
   if (isLoading) return (<h1 className="text-center font-bold text-3xl">Cargando...</h1>)
   if (isError) return (<h1 className="text-center font-bold text-3xl">Ha habido un error...</h1>)
@@ -32,10 +37,17 @@ export const ProjectDetailsPage = () => {
           Agregar Tarea
         </button>
 
-        <Link 
-          to={`/projects/${currentProject?._id}/team`}
+        {  currentUser._id === currentProject?.manager && (
+          <Link 
+            to={`/projects/${currentProject?._id}/team`}
+            className="bg-purple-400 hover:bg-purple-500 px-10 py-3 text-white text-xl font-bold cursor-pointer transition-colors"
+          >Colaboradores</Link>
+        ) }
+
+        <Link
+          to={`/`}
           className="bg-purple-400 hover:bg-purple-500 px-10 py-3 text-white text-xl font-bold cursor-pointer transition-colors"
-        >Colaboradores</Link>
+        >Volver a los proyectos</Link>
 
         <TaskModalDetails/>
         <EditTaskModal/>

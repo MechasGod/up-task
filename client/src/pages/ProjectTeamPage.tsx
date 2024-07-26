@@ -1,21 +1,38 @@
 import AddMemberModal from '@/components/ProjectDetails/Teams/AddMemberModal';
 import { Menu, Transition } from '@headlessui/react';
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid';
-import { useQuery } from '@tanstack/react-query';
-import { getAllMembers } from '../api/TeamAPI';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { deleteMember, getAllMembers } from '../api/TeamAPI';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Fragment } from 'react/jsx-runtime';
 import { UserDisplay } from '../types';
+import { toast } from 'react-toastify';
 
 export const ProjectTeamPage = () => {
 
   const navigate = useNavigate()
   const { projectId } = useParams()
 
+  const queryClient = useQueryClient()
+
   const { data: teamMembers, isLoading, isError } = useQuery({
     queryKey: [ "projectTeam", projectId! ],
     queryFn: () => getAllMembers(projectId!),
     retry: 1
+  })
+
+  const { mutate } = useMutation({
+    mutationFn: deleteMember,
+    onError: (error) => {
+        toast.error("Ha habido un error, intentelo más tarde")
+        console.log(error)
+      },
+      onSuccess: ( data ) => {
+        if (data.success) {
+        queryClient.invalidateQueries({ queryKey: [ "projectTeam", projectId ] })
+        toast.success(data.msg)
+        } else toast.error(data.msg)
+      }
   })
 
   if (isLoading) return (<h1 className="text-center font-bold text-3xl">Cargando...</h1>)
@@ -74,6 +91,7 @@ export const ProjectTeamPage = () => {
                                         <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
                                             <Menu.Item>
                                                 <button
+                                                    onClick={() => mutate({ projectId: projectId!, id: member._id }) } 
                                                     type='button'
                                                     className='block px-3 py-1 text-sm leading-6 text-red-500'
                                                 >

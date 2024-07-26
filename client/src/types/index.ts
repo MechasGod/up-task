@@ -26,6 +26,7 @@ export const projectSchema = z.object({
   projectName: z.string(),
   clientName: z.string(),
   description: z.string(),
+  manager: z.string(),
   tasks: z.array(taskSchema).or(z.array(z.string())), //asi se indica que también podrian ser un string, lo cual es cierto
   //pues cuando hacemos la petición desde el dashboard el backend no popula los tasks, y los manda como un arreglo de id's
 })

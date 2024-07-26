@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { addMember, getUserIdByEmailTEAM } from '../../../api/TeamAPI';
 import { toast } from 'react-toastify';
 
@@ -12,6 +12,7 @@ export default function AddMemberForm() {
     const projectId = params.projectId!
 
     const navigate = useNavigate()
+    const queryClient = useQueryClient()
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm({ defaultValues: initialValues })
 
@@ -26,6 +27,7 @@ export default function AddMemberForm() {
         console.log(error)
       },
       onSuccess: (  ) => {
+          queryClient.invalidateQueries({ queryKey: [ "projectTeam", projectId ] })
           navigate(`/projects/${projectId}/team`)
           toast.success("Miembro añadido correctamente")       
           reset()
